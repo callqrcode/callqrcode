@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Create Call QR Codes instantly with phone number. Modern, responsive tool with preview and customization."/>
+  <title>Call QR Code Generator | goqrgen.com</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(145deg, #1a1a2e, #16213e);
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    p.description {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 30px;
+      font-size: 1rem;
+      opacity: 0.85;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      border: none;
+    }
+
+    input[type="text"], select {
+      background: #1e1e2f;
+      color: #fff;
+      border: 1px solid #444;
+    }
+
+    input[type="color"] {
+      padding: 6px;
+    }
+
+    button {
+      background: #00adb5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #008891;
+    }
+
+    .qr-code {
+      text-align: center;
+    }
+
+    .qr-code canvas {
+      margin: 10px 0;
+      max-width: 100%;
+    }
+
+    .info-section {
+      margin-top: 40px;
+      max-width: 750px;
+      text-align: left;
+      line-height: 1.6;
+      padding: 0 10px;
+    }
+
+    footer {
+      margin-top: 50px;
+      font-size: 0.9rem;
+      opacity: 0.5;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📞 Call QR Code Generator</h1>
+  <p class="description">Generate QR Codes for phone calls instantly. Share your number easily by scanning. Fully customizable, mobile-friendly, and modern.</p>
+
+  <div class="container">
+    <label for="country">Select Country Code</label>
+    <select id="country">
+      <option value="+1">🇺🇸 +1 (USA)</option>
+      <option value="+91" selected>🇮🇳 +91 (India)</option>
+      <option value="+44">🇬🇧 +44 (UK)</option>
+      <option value="+61">🇦🇺 +61 (Australia)</option>
+      <option value="+81">🇯🇵 +81 (Japan)</option>
+      <option value="+971">🇦🇪 +971 (UAE)</option>
+    </select>
+
+    <label for="phone">Enter Phone Number</label>
+    <input type="text" id="phone" placeholder="9876543210">
+
+    <label for="color">Select QR Code Color</label>
+    <input type="color" id="color" value="#000000">
+
+    <button onclick="generateQR()">Generate QR Code</button>
+
+    <div class="qr-code" id="qrCode"></div>
+
+    <button onclick="downloadQR()">Download QR Code</button>
+  </div>
+
+  <div class="info-section">
+    <h2>🔎 About This Tool</h2>
+    <p>
+      The <a href="https://goqrgen.com/generator" target="_blank" style="color: #00adb5; text-decoration: none;">Call QR Code Generator</a> tool lets users instantly create scannable QR codes that initiate a phone call when scanned. It's perfect for business cards, banners, websites, and contactless sharing.
+    </p>
+
+    <h2>📋 How to Use</h2>
+    <ul>
+      <li>Select your country code.</li>
+      <li>Enter your phone number.</li>
+      <li>Choose a custom QR code color (optional).</li>
+      <li>Click “Generate QR Code” to preview it.</li>
+      <li>Click “Download QR Code” to save it as a PNG file.</li>
+    </ul>
+
+    <h2>💡 Use Cases</h2>
+    <ul>
+      <li>Printed business cards</li>
+      <li>Customer support contact</li>
+      <li>Event or campaign flyers</li>
+      <li>Online contact links</li>
+    </ul>
+  </div>
+
+  <footer>
+    &copy; 2025 Call QR Code Generator — Built with ❤️ by goqrgen.com
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    let qr;
+
+    function generateQR() {
+      const code = document.getElementById('country').value;
+      const phone = document.getElementById('phone').value.trim();
+      const color = document.getElementById('color').value;
+      const qrContainer = document.getElementById('qrCode');
+      qrContainer.innerHTML = '';
+
+      if (!/^[0-9]{6,15}$/.test(phone)) {
+        alert("Please enter a valid phone number.");
+        return;
+      }
+
+      const tel = `tel:${code}${phone}`;
+      qr = new QRCode(qrContainer, {
+        text: tel,
+        width: 230,
+        height: 230,
+        colorDark: color,
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    function downloadQR() {
+      if (!qr || !document.querySelector('#qrCode canvas')) {
+        alert("Please generate the QR code first.");
+        return;
+      }
+      const canvas = document.querySelector('#qrCode canvas');
+      const link = document.createElement('a');
+      link.download = 'call-qr-code.png';
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+  </script>
+</body>
+</html>
